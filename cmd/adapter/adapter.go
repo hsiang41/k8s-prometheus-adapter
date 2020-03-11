@@ -19,6 +19,7 @@ package main
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -98,10 +99,12 @@ func (cmd *PrometheusAdapter) makePromClient() (prom.Client, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to read prometheus-token-file: %v", err)
 		}
+		klog.Infof("httpClient Transport: %v", httpClient.Transport)
 		httpClient.Transport = transport.NewBearerAuthRoundTripper(string(data), httpClient.Transport)
 	}
 
 	genericPromClient := prom.NewGenericAPIClient(httpClient, baseURL)
+	klog.Infof("generic prom client: %v, base url: %s", genericPromClient, baseURL)
 	instrumentedGenericPromClient := mprom.InstrumentGenericAPIClient(genericPromClient, baseURL.String())
 	return prom.NewClientForAPI(instrumentedGenericPromClient), nil
 }
@@ -304,6 +307,7 @@ func makeKubeconfigHTTPClient(inClusterAuth bool, kubeConfigPath string) (*http.
 
 	// return the default client if we're using no auth
 	if !inClusterAuth && kubeConfigPath == "" {
+		klog.Infof("Use the default client with no authorization")
 		return http.DefaultClient, nil
 	}
 
@@ -316,18 +320,27 @@ func makeKubeconfigHTTPClient(inClusterAuth bool, kubeConfigPath string) (*http.
 		if err != nil {
 			return nil, fmt.Errorf("unable to construct  auth configuration from %q for connecting to Prometheus: %v", kubeConfigPath, err)
 		}
+		klog.Infof("use ClientConfig")
 	} else {
 		var err error
 		authConf, err = rest.InClusterConfig()
 		if err != nil {
 			return nil, fmt.Errorf("unable to construct in-cluster auth configuration for connecting to Prometheus: %v", err)
 		}
+		klog.Infof("use InClusterConfig")
 	}
-	tr, err := rest.TransportFor(authConf)
+
+	strAuthConf, _ := json.Marshal(authConf)
+	klog.Infof("authConf: %s", string(strAuthConf))
+
+	//tr, err := rest.TransportFor(authConf)
+	/*
 	if err != nil {
 		return nil, fmt.Errorf("unable to construct client transport for connecting to Prometheus: %v", err)
 	}
-	return &http.Client{Transport: tr}, nil
+	*/
+	// return &http.Client{Transport: tr}, nil
+	return 	&http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify:true}}}, nil
 }
 
 func makePrometheusCAClient(caFilename string) (*http.Client, error) {
