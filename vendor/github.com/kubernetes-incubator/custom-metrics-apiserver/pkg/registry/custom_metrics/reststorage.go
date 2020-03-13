@@ -32,6 +32,7 @@ import (
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
 	"k8s.io/apiserver/pkg/registry/rest"
 	"k8s.io/metrics/pkg/apis/custom_metrics"
+	"k8s.io/klog"
 )
 
 type REST struct {
@@ -68,6 +69,9 @@ func (r *REST) List(ctx context.Context, options *metainternalversion.ListOption
 	if !ok {
 		return nil, fmt.Errorf("invalid options object: %#v", options)
 	}
+
+	// Debug
+	metricOpts.(*custom_metrics.MetricListOptions).LabelSelector = ""
 
 	// populate the label selector, defaulting to all
 	selector := labels.Everything()
@@ -115,9 +119,10 @@ func (r *REST) List(ctx context.Context, options *metainternalversion.ListOption
 		namespace = ""
 	}
 
+	klog.Infof("handleWildcardOp %s: label selector: %v, selector: %v", name, metricLabelSelector, selector)
 	// handle namespaced and root metrics
 	if name == "*" {
-		return r.handleWildcardOp(namespace, groupResource, selector, metricName, metricLabelSelector)
+		return r.handleWildcardOp(namespace, groupResource, metricLabelSelector, metricName, metricLabelSelector)
 	} else {
 		return r.handleIndividualOp(namespace, groupResource, name, metricName, metricLabelSelector)
 	}
