@@ -24,7 +24,7 @@ Kubernetes HPA Autoscaling with Kafka metrics
 {"kind":"APIResourceList","apiVersion":"v1","groupVersion":"custom.metrics.k8s.io/v1beta1","resources":[{"name":"namespaces/kafka_consumergroup_lag","singularName":"","namespaced":false,"kind":"MetricValueList","verbs":["get"]},{"name":"pods/kafka_consumergroup_lag","singularName":"","namespaced":true,"kind":"MetricValueList","verbs":["get"]}
 ```
 
-### Verify the custom api provde the kefka lag metrics
+### Verify the custom api provide the kafka lag metrics
 ``$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/*/metrics/kafka_consumergroup_lag``
 ```console
 [root@node17121 ~]# oc get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/myproject/pods/*/kafka_consumergroup_lag
@@ -33,7 +33,7 @@ Kubernetes HPA Autoscaling with Kafka metrics
 ## Config the kafka hpa with the kafka lag metrics
 ``$ oc apply -f ./customer-hpa-kafka.yaml ``
 
-### constomer-hpa-kafka.yaml
+### customer-hpa-kafka.yaml
 ```yaml
 kind: HorizontalPodAutoscaler
 apiVersion: autoscaling/v2beta1
@@ -55,7 +55,7 @@ spec:
       targetAverageValue: 10000
  ```
 
-### Use commend to get hpa status and verify the reference target value that should associate lag metrics
+### Use command to get hpa status and verify the reference target value that should match lag metrics
 ``$ oc get hpa consumer-hpa``
 ```console
 [root@node17121 config]# oc get hpa
