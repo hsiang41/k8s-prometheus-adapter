@@ -97,14 +97,14 @@ metadata:
 data:
   config.yaml: |
     rules:
-    - seriesQuery: "kafka_consumergroup_lag"
-      seriesFilters: []
-      resources:
-        overrides:
-          namespace:
-            resource: namespace
-          pod_name:
-            resource: pod
+      - seriesQuery: "kafka_consumergroup_lag"
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace:
+              resource: namespace
+            pod:
+              resource: pod
         name:
           matches: "kafka_consumergroup_lag"
           as: "kafka_consumergroup_lag"
