@@ -36,13 +36,13 @@ Kubernetes HPA Autoscaling with Kafka metrics
 ### constomer-hpa-kafka.yaml
 ```yaml
 kind: HorizontalPodAutoscaler
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 metadata:
   name: consumer-hpa
   namespace: myproject
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: consumer
     namespace: myproject
@@ -57,3 +57,8 @@ spec:
 
 ### Use commend to get hpa status and verify the reference target value that should associate lag metrics
 ``$ oc get hpa consumer-hpa``
+```console
+[root@node17121 config]# oc get hpa
+NAME           REFERENCE             TARGETS          MINPODS   MAXPODS   REPLICAS   AGE
+consumer-hpa   Deployment/consumer   1000/1300   1         40        5          2m
+```
