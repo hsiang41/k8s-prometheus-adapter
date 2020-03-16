@@ -53,8 +53,8 @@ spec:
   - type: Pods
     pods:
       metricName: "kafka_consumergroup_lag"
-      targetAverageValue: 1000
+      targetAverageValue: 10000
  ```
 
 ### Use commend to get hpa status and verify the reference target value that should associate lag metrics
-``$ oc get hpa consumer-hap``
+``$ oc get hpa consumer-hpa``
