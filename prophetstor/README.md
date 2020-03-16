@@ -6,7 +6,7 @@ Kubernetes HPA Autoscaling with Kafka metrics
 
 ``$ oc apply -f .``
 
-# Load k8s-prometheus-adapter image
+# Load k8s-prometheus-adapter image or use Prophetstor images repository
 
 ``docker load -i k8s-prometheus-adapter-amd64.tgz``  
 ``docker tag directxman12/k8s-prometheus-adapter-amd64:latest  docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest``  
@@ -18,7 +18,9 @@ Kubernetes HPA Autoscaling with Kafka metrics
 ``$ oc edit deployemnt prometheus-adapter -n default``
 
  ## Correct image path
- image: docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest
+ image: docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest    
+ or  
+ image: repo.prophetservice.com/k8s-prometheus-adapter-amd64:latest
 
 ## Assign service account
 ``$ oc adm policy add-cluster-role-to-user admin system:serviceaccount:default:custom-metrics-apiserver`` 
