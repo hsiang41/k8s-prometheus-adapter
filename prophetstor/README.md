@@ -25,7 +25,7 @@ Kubernetes HPA Autoscaling with Kafka metrics
 ```
 
 ### Verify the custom api provide the kafka lag metrics
-``$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/*/metrics/kafka_consumergroup_lag``
+``$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/myproject/pods/*/kafka_consumergroup_lag``
 ```console
 [root@node17121 ~]# oc get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/myproject/pods/*/kafka_consumergroup_lag
 {"kind":"MetricValueList","apiVersion":"custom.metrics.k8s.io/v1beta1","metadata":{"selfLink":"/apis/custom.metrics.k8s.io/v1beta1/namespaces/myproject/pods/%2A/kafka_consumergroup_lag"},"items":[{"describedObject":{"kind":"Pod","namespace":"myproject","name":"my-cluster-kafka-exporter-5995bf9d67-clfcb","apiVersion":"/v1"},"metricName":"kafka_consumergroup_lag","timestamp":"2020-03-16T06:03:40Z","value":"2335363m","selector":null}]}

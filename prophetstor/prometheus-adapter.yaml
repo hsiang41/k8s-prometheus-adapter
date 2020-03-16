@@ -103,7 +103,7 @@ data:
         overrides:
           namespace:
             resource: namespace
-          pod_name:
+          pod:
             resource: pod
         name:
           matches: "kafka_consumergroup_lag"
@@ -163,7 +163,7 @@ spec:
       serviceAccountName: custom-metrics-apiserver
       containers:
       - name: prometheus-adapter
-        image: docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest
+        image: quay.io/prophetstor/pds-prometheus-adapter:stable
         args:
         - --secure-port=6443
         - --tls-cert-file=/var/run/serving-cert/serving.crt
