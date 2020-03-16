@@ -169,6 +169,7 @@ spec:
         - --logtostderr=true
         - --prometheus-url=https://prometheus-operated.openshift-monitoring.svc:9091
         - --prometheus-token-file=/var/run/secrets/kubernetes.io/serviceaccount/token
+        - --prometheus-auth-incluster=true
         - --metrics-relist-interval=1m
         - --v=4
         - --config=/etc/adapter/config.yaml
