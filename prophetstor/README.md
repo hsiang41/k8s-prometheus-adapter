@@ -6,20 +6,11 @@ Kubernetes HPA Autoscaling with Kafka metrics
 
 ``$ oc apply -f .``
 
-# Load k8s-prometheus-adapter image or use Prophetstor images repository
-
-``docker load -i k8s-prometheus-adapter-amd64.tgz``  
-``docker tag directxman12/k8s-prometheus-adapter-amd64:latest  docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest``  
-``docker login -u openshift -p $(oc whoami -t) docker-registry.default.svc:5000``  
-``docker push docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest``  
-
 # Edit k8s-prometheus-adapter deployment file image path
 
 ``$ oc edit deployemnt prometheus-adapter -n default``
 
  ## Correct image path
- image: docker-registry.default.svc:5000/default/k8s-prometheus-adapter-amd64:latest    
- or  
  image: repo.prophetservice.com/k8s-prometheus-adapter-amd64:latest
 
 ## Assign service account
@@ -28,9 +19,17 @@ Kubernetes HPA Autoscaling with Kafka metrics
 ## Verify the custom api
 ### Verify the custom api provide default resource 
 ``$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/``
+```console
+[root@node17121 ~]# oc get --raw /apis/custom.metrics.k8s.io/v1beta1
+{"kind":"APIResourceList","apiVersion":"v1","groupVersion":"custom.metrics.k8s.io/v1beta1","resources":[{"name":"namespaces/kafka_consumergroup_lag","singularName":"","namespaced":false,"kind":"MetricValueList","verbs":["get"]},{"name":"pods/kafka_consumergroup_lag","singularName":"","namespaced":true,"kind":"MetricValueList","verbs":["get"]}
+```
+
 ### Verify the custom api provde the kefka lag metrics
 ``$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/*/metrics/kafka_consumergroup_lag``
-
+```console
+[root@node17121 ~]# oc get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/myproject/pods/*/kafka_consumergroup_lag
+{"kind":"MetricValueList","apiVersion":"custom.metrics.k8s.io/v1beta1","metadata":{"selfLink":"/apis/custom.metrics.k8s.io/v1beta1/namespaces/myproject/pods/%2A/kafka_consumergroup_lag"},"items":[{"describedObject":{"kind":"Pod","namespace":"myproject","name":"my-cluster-kafka-exporter-5995bf9d67-clfcb","apiVersion":"/v1"},"metricName":"kafka_consumergroup_lag","timestamp":"2020-03-16T06:03:40Z","value":"2335363m","selector":null}]}
+```
 ## Config the kafka hpa with the kafka lag metrics
 ``$ oc apply -f ./customer-hpa-kafka.yaml ``
 
