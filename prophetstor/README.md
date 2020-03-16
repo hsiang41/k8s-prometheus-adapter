@@ -62,3 +62,6 @@ spec:
 NAME           REFERENCE             TARGETS          MINPODS   MAXPODS   REPLICAS   AGE
 consumer-hpa   Deployment/consumer   1000/1300   1         40        5          2m
 ```
+
+# Reference
+https://github.com/DirectXMan12/k8s-prometheus-adapter

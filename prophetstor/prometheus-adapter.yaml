@@ -103,7 +103,7 @@ data:
         overrides:
           namespace:
             resource: namespace
-          pod:
+          pod_name:
             resource: pod
         name:
           matches: "kafka_consumergroup_lag"
