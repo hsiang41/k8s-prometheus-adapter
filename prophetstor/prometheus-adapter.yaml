@@ -108,7 +108,7 @@ data:
         name:
           matches: "kafka_consumergroup_lag"
           as: "kafka_consumergroup_lag"
-        metricsQuery: 'avg_over_time(kafka_consumergroup_lag{topic="topic0001",consumergroup="group0001"}[1m])'
+        metricsQuery: 'clamp_min(avg_over_time(kafka_consumergroup_lag{topic="topic0001",consumergroup="group0001"}[1m]), 0)'
 ---
 apiVersion: v1
 kind: Service
